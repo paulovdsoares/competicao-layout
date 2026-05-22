@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>RoboCounter - Sistema de Pontuação para Robótica</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Acex</h1>
+        
+        <div class="identification">
+            <div class="input-group">
+                <label>🏆 Número da Partida</label>
+                <input type="text" id="matchNumber" placeholder="Ex: 001, 02, Semi-Final A" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>🤝 Nome/Número do Time</label>
+                <input type="text" id="teamName" placeholder="Ex: Robô Titans, Equipe 07" autocomplete="off">
+            </div>
+        </div>
+        
+        <div class="score-area">
+            <!-- Objetivo 1 -->
+            <div class="score-card">
+                <div class="card-title">
+                    <span>🎯 Coleta de Latas</span>
+                    <span class="points-value">Vale 10 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="obj1">-</button>
+                    <div class="counter-display" id="obj1Count">0</div>
+                    <button class="btn btn-add" data-target="obj1">+</button>
+                </div>
+            </div>
+            
+            <!-- Objetivo 2 -->
+            <div class="score-card">
+                <div class="card-title">
+                    <span>⚙️ Entrega na Zona</span>
+                    <span class="points-value">Vale 25 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="obj2">-</button>
+                    <div class="counter-display" id="obj2Count">0</div>
+                    <button class="btn btn-add" data-target="obj2">+</button>
+                </div>
+            </div>
+            
+            <!-- Objetivo 3 -->
+            <div class="score-card">
+                <div class="card-title">
+                    <span>🚀 Desafio Especial</span>
+                    <span class="points-value">Vale 50 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="obj3">-</button>
+                    <div class="counter-display" id="obj3Count">0</div>
+                    <button class="btn btn-add" data-target="obj3">+</button>
+                </div>
+            </div>
+            
+            <!-- Penalidades -->
+            <div class="score-card penalty-card">
+                <div class="card-title">
+                    <span>⚠️ Penalidades</span>
+                    <span class="points-value">Perde 15 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="penalty">-</button>
+                    <div class="counter-display" id="penaltyCount">0</div>
+                    <button class="btn btn-add" data-target="penalty">+</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-panel">
+            <div class="total-label">PONTUAÇÃO TOTAL</div>
+            <div class="total-points" id="totalPoints">0</div>
+        </div>
+        
+        <div class="control-buttons">
+            <button class="btn-control btn-reset" id="resetBtn">🔄 Zerar Contador</button>
+            <button class="btn-control btn-sheet" id="sheetBtn">📊 Salvar na Planilha</button>
+            <button class="btn-control btn-copy" id="copyBtn">📋 Copiar Resultado</button>
+        </div>
+        
+        <div class="sheet-config" id="sheetConfig" style="display: none;">
+            <div class="config-header">
+                <h3>📊 Configuração da Planilha</h3>
+                <button id="closeSheetBtn" class="close-btn">✕</button>
+            </div>
+            <div class="input-group">
+                <label>🔑 URL do Google Sheets (Web App)</label>
+                <input type="url" id="sheetUrl" placeholder="https://script.google.com/macros/s/.../exec">
+            </div>
+            <button id="saveSheetBtn" class="btn-control btn-save">💾 Salvar Configuração</button>
+        </div>
+        
+        <button class="btn-config" id="configBtn">⚙️ Configurar Planilha</button>
+    </div>
+    
+    <div id="toast" class="toast">✅ Operação realizada com sucesso!</div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

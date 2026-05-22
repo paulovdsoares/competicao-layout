@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Resultados - RoboCounter IFBA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #003366 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Cabeçalho */
+        .header {
+            background: linear-gradient(135deg, #008b4a, #006437);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        /* Barra de ferramentas */
+        .toolbar {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .toolbar input, .toolbar select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .toolbar button {
+            padding: 10px 20px;
+            background: #008b4a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .toolbar button:active {
+            transform: scale(0.97);
+        }
+
+        /* Cards de estatísticas */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #008b4a;
+        }
+
+        /* Pódio */
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .podium-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            width: 200px;
+            transition: transform 0.3s;
+        }
+
+        .podium-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .podium-card.primeiro {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+        }
+
+        .podium-card.segundo {
+            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+            color: #333;
+        }
+
+        .podium-card.terceiro {
+            background: linear-gradient(135deg, #cd7f32, #f0a050);
+            color: white;
+        }
+
+        .podium-medal {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .podium-position {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .podium-team {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .podium-points {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .podium-match {
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Tabela */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #004b8f;
+            color: white;
+            padding: 12px;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 10px 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .rank-1 { background: #fff8e1; }
+        .rank-2 { background: #f5f5f5; }
+        .rank-3 { background: #fff3e0; }
+
+        /* Status de atualização */
+        .update-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #008b4a;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .podium-card { width: 150px; padding: 15px; }
+            .podium-points { font-size: 1.3em; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            th, td { font-size: 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .podium { flex-direction: column; align-items: center; }
+            .podium-card { width: 100%; max-width: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 INSTITUTO FEDERAL DA BAHIA 🏆</h1>
+            <h2>COMPETIÇÃO DE ROBÓTICA</h2>
+            <p>Campus Vitória da Conquista - Painel de Resultados</p>
+        </div>
+
+        <div class="toolbar">
+            <input type="text" id="searchInput" placeholder="🔍 Buscar time ou partida...">
+            <select id="sortSelect">
+                <option value="points">Ordenar por Pontuação</option>
+                <option value="name">Ordenar por Nome do Time</option>
+                <option value="match">Ordenar por Partida</option>
+            </select>
+            <button id="refreshBtn">🔄 Atualizar</button>
+        </div>
+
+        <div class="stats" id="statsArea">
+            <div class="stat-card">
+                <div class="stat-label">Total de Times</div>
+                <div class="stat-value" id="totalTeams">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Maior Pontuação</div>
+                <div class="stat-value" id="highestScore">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Média de Pontos</div>
+                <div class="stat-value" id="averageScore">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Times Participantes</div>
+                <div class="stat-value" id="activeTeams">0</div>
+            </div>
+        </div>
+
+        <div id="podiumArea" class="podium">
+            <div class="stat-card">Carregando resultados...</div>
+        </div>
+
+        <div class="table-container">
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Time</th>
+                        <th>Partida</th>
+                        <th>Coleta</th>
+                        <th>Entrega</th>
+                        <th>Desafio</th>
+                        <th>Penalidade</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="8" style="text-align: center;">📡 Conectando à planilha Google...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="update-status" id="updateStatus">
+        <div class="online-dot"></div>
+        <span>Atualizando a cada 5 segundos</span>
+    </div>
+
+    <script>
+        // ⚠️ COLE A SUA URL DO GOOGLE SHEETS AQUI ⚠️
+        const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbzD3tf9hmyFy3IFJjGRdkbirDqLby1bmOHai8YNjvfQJjEaDy58ROky_aLegFBv7CLj/exec';
+        
+        let allResults = [];
+        let updateInterval = null;
+
+        // Carregar dados da planilha
+        async function loadFromSheets() {
+            try {
+                const statusDiv = document.getElementById('updateStatus');
+                statusDiv.style.background = '#ffc107';
+                statusDiv.innerHTML = '<div class="online-dot"></div><span>🔄 Carregando...</span>';
+                
+                const response = await fetch(SHEETS_API_URL);
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.data) {
+                    allResults = data.data;
+                    render();
+                    statusDiv.style.background = '#008b4a';
+                    statusDiv.innerHTML = '<div class="online-dot"></div><span>✅ Atualizado agora!</span>';
+                    
+                    setTimeout(() => {
+                        statusDiv.innerHTML = '<div class="online-dot"></div><span>Atualizando a cada 5 segundos</span>';
+                    }, 2000);
+                } else {
+                    throw new Error(data.message || 'Erro ao carregar');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                const statusDiv = document.getElementById('updateStatus');
+                statusDiv.style.background = '#dc3545';
+                statusDiv.innerHTML = '<div></div><span>⚠️ Erro de conexão</span>';
+                
+                document.getElementById('tableBody').innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: #dc3545;">
+                            ❌ Erro ao conectar com a planilha.<br>
+                            Verifique se a URL está correta e se o Web App está publicado.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Renderizar tudo
+        function render() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const sortBy = document.getElementById('sortSelect').value;
+            
+            let filtered = [...allResults];
+            
+            // Filtrar
+            if (searchTerm) {
+                filtered = filtered.filter(r => 
+                    r.teamName.toLowerCase().includes(searchTerm) ||
+                    r.matchNumber.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Ordenar
+            if (sortBy === 'points') {
+                filtered.sort((a, b) => b.total_points - a.total_points);
+            } else if (sortBy === 'name') {
+                filtered.sort((a, b) => a.teamName.localeCompare(b.teamName));
+            } else if (sortBy === 'match') {
+                filtered.sort((a, b) => a.matchNumber.localeCompare(b.matchNumber));
+            }
+            
+            updateStats(filtered);
+            updatePodium(filtered.slice(0, 3));
+            updateTable(filtered);
+        }
+
+        // Atualizar estatísticas
+        function updateStats(results) {
+            const totalTeams = results.length;
+            const highestScore = results.length > 0 ? Math.max(...results.map(r => r.total_points)) : 0;
+            const averageScore = results.length > 0 ? 
+                (results.reduce((sum, r) => sum + r.total_points, 0) / results.length).toFixed(1) : 0;
+            const activeTeams = results.filter(r => r.total_points > 0).length;
+            
+            document.getElementById('totalTeams').textContent = totalTeams;
+            document.getElementById('highestScore').textContent = highestScore;
+            document.getElementById('averageScore').textContent = averageScore;
+            document.getElementById('activeTeams').textContent = activeTeams;
+        }
+
+        // Atualizar pódio
+        function updatePodium(top3) {
+            const podiumDiv = document.getElementById('podiumArea');
+            
+            if (top3.length === 0) {
+                podiumDiv.innerHTML = '<div class="stat-card">🏆 Aguardando primeiros resultados... 🏆</div>';
+                return;
+            }
+            
+            const medals = ['🥇', '🥈', '🥉'];
+            const classes = ['primeiro', 'segundo', 'terceiro'];
+            const titles = ['1º LUGAR', '2º LUGAR', '3º LUGAR'];
+            
+            podiumDiv.innerHTML = top3.map((team, idx) => `
+                <div class="podium-card ${classes[idx]}">
+                    <div class="podium-medal">${medals[idx]}</div>
+                    <div class="podium-position">${titles[idx]}</div>
+                    <div class="podium-team">${escapeHtml(team.teamName)}</div>
+                    <div class="podium-points">${team.total_points} pts</div>
+                    <div class="podium-match">Partida: ${escapeHtml(team.matchNumber)}</div>
+                </div>
+            `).join('');
+        }
+
+        // Atualizar tabela
+        function updateTable(results) {
+            const tbody = document.getElementById('tableBody');
+            
+            if (results.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center;">📭 Nenhum resultado registrado ainda</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = results.map((team, idx) => {
+                let rankClass = '';
+                let medal = '';
+                if (idx === 0) { rankClass = 'rank-1'; medal = '🥇 '; }
+                else if (idx === 1) { rankClass = 'rank-2'; medal = '🥈 '; }
+                else if (idx === 2) { rankClass = 'rank-3'; medal = '🥉 '; }
+                
+                return `
+                    <tr class="${rankClass}">
+                        <td>${medal}${idx + 1}</td>
+                        <td><strong>${escapeHtml(team.teamName)}</strong></td>
+                        <td>${escapeHtml(team.matchNumber)}</td>
+                        <td>${team.obj1_count} (${team.obj1_points})</td>
+                        <td>${team.obj2_count} (${team.obj2_points})</td>
+                        <td>${team.obj3_count} (${team.obj3_points})</td>
+                        <td style="color: ${team.penalty_points < 0 ? '#dc3545' : '#28a745'}">
+                            ${team.penalty_count} (${team.penalty_points})
+                        </td>
+                        <td><strong style="color: #008b4a; font-size: 1.1em;">${team.total_points}</strong></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Escapar HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Eventos
+        function setupEvents() {
+            document.getElementById('searchInput').addEventListener('input', () => render());
+            document.getElementById('sortSelect').addEventListener('change', () => render());
+            document.getElementById('refreshBtn').addEventListener('click', () => {
+                loadFromSheets();
+            });
+        }
+
+        // Atualização automática
+        function startAutoUpdate() {
+            loadFromSheets();
+            if (updateInterval) clearInterval(updateInterval);
+            updateInterval = setInterval(loadFromSheets, 5000);
+        }
+
+        // Inicializar
+        function init() {
+            setupEvents();
+            startAutoUpdate();
+            console.log('📊 Painel de Resultados iniciado!');
+            console.log(`📡 URL da planilha: ${SHEETS_API_URL}`);
+        }
+        
+        init();
+    </script>
+</body>
+</html>

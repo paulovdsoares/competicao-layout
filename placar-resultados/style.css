@@ -1,0 +1,433 @@
+/* ===== RESET E CONFIGURAÇÕES GERAIS ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== CORES INSTITUCIONAIS IFBA ===== */
+:root {
+    --ifba-green: #008b4a;
+    --ifba-green-dark: #006437;
+    --ifba-green-light: #e6f3ec;
+    --ifba-blue: #004b8f;
+    --ifba-blue-dark: #003366;
+    --ifba-blue-light: #e8f0f7;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-700: #495057;
+    --gray-800: #343a40;
+    --white: #ffffff;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --success: #28a745;
+}
+
+body {
+    font-family: 'Segoe UI', 'Arial', 'Verdana', sans-serif;
+    background: var(--ifba-green-light);
+    color: var(--gray-800);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ===== CABEÇALHO IFBA ===== */
+.ifba-header {
+    background: linear-gradient(135deg, var(--ifba-green) 0%, var(--ifba-green-dark) 100%);
+    color: var(--white);
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.logo-area {
+    margin-bottom: 15px;
+}
+
+.ifba-logo {
+    display: flex;
+    flex-direction: column;
+}
+
+.ifba-logo .ifba {
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.ifba-logo .campus {
+    font-size: 0.85em;
+    opacity: 0.95;
+}
+
+.sistema-title h2 {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+    color: var(--white);
+}
+
+.sistema-title p {
+    font-size: 0.85em;
+    opacity: 0.9;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.container {
+    max-width: 600px;
+    margin: 30px auto;
+    background: var(--white);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+}
+
+/* ===== SEÇÃO DE IDENTIFICAÇÃO ===== */
+.identification {
+    background: var(--ifba-blue-light);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 25px;
+    border-left: 4px solid var(--ifba-blue);
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--ifba-blue);
+    font-size: 0.9em;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--ifba-green);
+    box-shadow: 0 0 0 3px rgba(0, 139, 74, 0.1);
+}
+
+/* ===== CARDS DE PONTUAÇÃO ===== */
+.score-area {
+    margin-bottom: 25px;
+}
+
+.score-card {
+    background: var(--gray-100);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 12px;
+    border: 1px solid var(--gray-300);
+    transition: all 0.2s;
+}
+
+.score-card:hover {
+    border-color: var(--ifba-green);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: var(--gray-800);
+}
+
+.points-value {
+    color: var(--ifba-green);
+    font-size: 0.85em;
+    font-weight: normal;
+}
+
+.card-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.counter-display {
+    flex: 1;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    background: var(--white);
+    border-radius: 6px;
+    padding: 10px;
+    min-width: 80px;
+    border: 1px solid var(--gray-300);
+}
+
+/* ===== BOTÕES ===== */
+.btn {
+    padding: 12px 20px;
+    font-size: 1.2em;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 48px;
+    min-width: 60px;
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+.btn-add {
+    background: var(--ifba-green);
+    color: var(--white);
+}
+
+.btn-add:active {
+    background: var(--ifba-green-dark);
+}
+
+.btn-sub {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.btn-sub:active {
+    background: #c82333;
+}
+
+.penalty-card {
+    background: #fff5f5;
+    border-color: #f5c6cb;
+}
+
+/* ===== PAINEL DE RESULTADOS ===== */
+.result-panel {
+    background: var(--ifba-blue);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--white);
+}
+
+.total-label {
+    font-size: 0.9em;
+    letter-spacing: 2px;
+    opacity: 0.95;
+}
+
+.total-points {
+    font-size: 3.5em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* ===== BOTÕES DE CONTROLE ===== */
+.control-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.btn-control {
+    flex: 1;
+    padding: 12px;
+    font-size: 0.95em;
+    font-weight: 600;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 48px;
+}
+
+.btn-control:active {
+    transform: scale(0.98);
+}
+
+.btn-reset {
+    background: var(--danger);
+    color: var(--white);
+    border: none;
+}
+
+.btn-sheet {
+    background: var(--ifba-green);
+    color: var(--white);
+    border: none;
+}
+
+.btn-copy {
+    background: var(--ifba-blue);
+    color: var(--white);
+    border: none;
+}
+
+.btn-save {
+    background: var(--success);
+    color: var(--white);
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* ===== CONFIGURAÇÃO DA PLANILHA ===== */
+.sheet-config {
+    background: var(--gray-100);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 15px;
+    border: 2px solid var(--ifba-green);
+    margin-bottom: 15px;
+}
+
+.config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.config-header h3 {
+    color: var(--ifba-green);
+    margin: 0;
+}
+
+.close-btn {
+    background: var(--danger);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.btn-config {
+    width: 100%;
+    padding: 12px;
+    background: var(--gray-100);
+    color: var(--ifba-blue);
+    border: 1px solid var(--ifba-blue);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-config:active {
+    transform: scale(0.98);
+}
+
+/* ===== RODAPÉ IFBA ===== */
+.ifba-footer {
+    background: var(--gray-800);
+    color: var(--gray-300);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.75em;
+    margin-top: auto;
+}
+
+.ifba-footer p {
+    margin: 5px 0;
+}
+
+/* ===== TOAST NOTIFICATION ===== */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ifba-green);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 1000;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 480px) {
+    .container {
+        margin: 15px;
+        padding: 15px;
+    }
+    
+    .total-points {
+        font-size: 2.5em;
+    }
+    
+    .card-controls {
+        flex-wrap: wrap;
+    }
+    
+    .counter-display {
+        order: 1;
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    .btn-add, .btn-sub {
+        flex: 1;
+        order: 2;
+    }
+    
+    .btn-sub {
+        order: 3;
+    }
+    
+    .control-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-control {
+        width: 100%;
+    }
+    
+    .toast {
+        white-space: normal;
+        text-align: center;
+        max-width: 90%;
+    }
+    
+    .ifba-header {
+        padding: 15px;
+    }
+    
+    .ifba-logo .ifba {
+        font-size: 1.5em;
+    }
+}
