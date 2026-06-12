@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -182,6 +182,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 800px;
         }
 
         th {
@@ -190,6 +191,7 @@
             padding: 12px;
             position: sticky;
             top: 0;
+            font-size: 0.85em;
         }
 
         td {
@@ -239,7 +241,7 @@
             .podium-card { width: 150px; padding: 15px; }
             .podium-points { font-size: 1.3em; }
             .stats { grid-template-columns: repeat(2, 1fr); }
-            th, td { font-size: 12px; }
+            th, td { font-size: 11px; }
         }
 
         @media (max-width: 480px) {
@@ -296,16 +298,22 @@
                         <th>#</th>
                         <th>Time</th>
                         <th>Partida</th>
-                        <th>Coleta</th>
-                        <th>Entrega</th>
-                        <th>Desafio</th>
-                        <th>Penalidade</th>
+                        <th>Bola Golfe (10)</th>
+                        <th>Bola Prata (20)</th>
+                        <th>Bola Verm (30)</th>
+                        <th>Gol (50)</th>
+                        <th>Caçapa Prata (20)</th>
+                        <th>Caçapa Verm (30)</th>
+                        <th>Túnel (25)</th>
+                        <th>Cubo Verm (120)</th>
+                        <th>Cubo Azul (140)</th>
+                        <th>Cubo Branco (180)</th>
                         <th>Total</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
                     <tr>
-                        <td colspan="8" style="text-align: center;">📡 Conectando à planilha Google...</td>
+                        <td colspan="14" style="text-align: center;">📡 Conectando à planilha Google...</td>
                     </tr>
                 </tbody>
             </table>
@@ -319,7 +327,7 @@
 
     <script>
         // ⚠️ COLE A SUA URL DO GOOGLE SHEETS AQUI ⚠️
-        const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbzD3tf9hmyFy3IFJjGRdkbirDqLby1bmOHai8YNjvfQJjEaDy58ROky_aLegFBv7CLj/exec';
+        const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbz_ROGFn7Xvv_gU03oed2aEoUYS6rnjy8Gbb5M3lnlMUvolsQ_ydSky9083lsJ5rUBQYg/exec';
         
         let allResults = [];
         let updateInterval = null;
@@ -354,7 +362,7 @@
                 
                 document.getElementById('tableBody').innerHTML = `
                     <tr>
-                        <td colspan="8" style="text-align: center; color: #dc3545;">
+                        <td colspan="14" style="text-align: center; color: #dc3545;">
                             ❌ Erro ao conectar com a planilha.<br>
                             Verifique se a URL está correta e se o Web App está publicado.
                         </td>
@@ -430,6 +438,13 @@
             `).join('');
         }
 
+        // Calcular total de pontos de um item
+        function getItemTotal(team, field, value) {
+            const count = team[field] || 0;
+            const points = count * value;
+            return `${count} (${points})`;
+        }
+
         // Atualizar tabela
         function updateTable(results) {
             const tbody = document.getElementById('tableBody');
@@ -437,7 +452,7 @@
             if (results.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="8" style="text-align: center;">📭 Nenhum resultado registrado ainda</td>
+                        <td colspan="14" style="text-align: center;">📭 Nenhum resultado registrado ainda</td>
                     </tr>
                 `;
                 return;
@@ -455,12 +470,16 @@
                         <td>${medal}${idx + 1}</td>
                         <td><strong>${escapeHtml(team.teamName)}</strong></td>
                         <td>${escapeHtml(team.matchNumber)}</td>
-                        <td>${team.obj1_count} (${team.obj1_points})</td>
-                        <td>${team.obj2_count} (${team.obj2_points})</td>
-                        <td>${team.obj3_count} (${team.obj3_points})</td>
-                        <td style="color: ${team.penalty_points < 0 ? '#dc3545' : '#28a745'}">
-                            ${team.penalty_count} (${team.penalty_points})
-                        </td>
+                        <td>${team.golfBall_count || 0} (${(team.golfBall_count || 0) * 10})</td>
+                        <td>${team.silverBall_count || 0} (${(team.silverBall_count || 0) * 20})</td>
+                        <td>${team.redBall_count || 0} (${(team.redBall_count || 0) * 30})</td>
+                        <td>${team.goal_count || 0} (${(team.goal_count || 0) * 50})</td>
+                        <td>${team.silverTrap_count || 0} (${(team.silverTrap_count || 0) * 20})</td>
+                        <td>${team.redTrap_count || 0} (${(team.redTrap_count || 0) * 30})</td>
+                        <td>${team.tunnel_count || 0} (${(team.tunnel_count || 0) * 25})</td>
+                        <td>${team.redCube_count || 0} (${(team.redCube_count || 0) * 120})</td>
+                        <td>${team.blueCube_count || 0} (${(team.blueCube_count || 0) * 140})</td>
+                        <td>${team.whiteCube_count || 0} (${(team.whiteCube_count || 0) * 180})</td>
                         <td><strong style="color: #008b4a; font-size: 1.1em;">${team.total_points}</strong></td>
                     </tr>
                 `;

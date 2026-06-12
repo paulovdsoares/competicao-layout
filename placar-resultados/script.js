@@ -1,19 +1,31 @@
 // Configuração dos valores dos objetivos
 const config = {
-    obj1: { value: 10, name: "Coleta de Latas" },
-    obj2: { value: 25, name: "Entrega na Zona" },
-    obj3: { value: 50, name: "Desafio Especial" },
-    penalty: { value: -15, name: "Penalidades" }
+    golfBall: { value: 10, name: "Bola Golfe" },
+    silverBall: { value: 20, name: "Bola Prata" },
+    redBall: { value: 30, name: "Bola Vermelha" },
+    goal: { value: 50, name: "Gol" },
+    silverTrap: { value: 20, name: "Caçapa Prata" },
+    redTrap: { value: 30, name: "Caçapa Vermelha" },
+    tunnel: { value: 25, name: "Túnel" },
+    redCube: { value: 120, name: "Cubo Vermelho" },
+    blueCube: { value: 140, name: "Cubo Azul" },
+    whiteCube: { value: 180, name: "Cubo Branco Extra" }
 };
 
 // Estado do aplicativo
 let state = {
     matchNumber: '',
     teamName: '',
-    obj1: 0,
-    obj2: 0,
-    obj3: 0,
-    penalty: 0
+    golfBall: 0,
+    silverBall: 0,
+    redBall: 0,
+    goal: 0,
+    silverTrap: 0,
+    redTrap: 0,
+    tunnel: 0,
+    redCube: 0,
+    blueCube: 0,
+    whiteCube: 0
 };
 
 // Configuração da planilha
@@ -25,10 +37,6 @@ let sheetConfig = {
 const elements = {
     matchNumber: document.getElementById('matchNumber'),
     teamName: document.getElementById('teamName'),
-    obj1Count: document.getElementById('obj1Count'),
-    obj2Count: document.getElementById('obj2Count'),
-    obj3Count: document.getElementById('obj3Count'),
-    penaltyCount: document.getElementById('penaltyCount'),
     totalPoints: document.getElementById('totalPoints'),
     resetBtn: document.getElementById('resetBtn'),
     copyBtn: document.getElementById('copyBtn'),
@@ -40,22 +48,110 @@ const elements = {
     closeSheetBtn: document.getElementById('closeSheetBtn')
 };
 
+// Elementos dos contadores
+const counterElements = {
+    golfBall: document.getElementById('golfBallCount'),
+    silverBall: document.getElementById('silverBallCount'),
+    redBall: document.getElementById('redBallCount'),
+    goal: document.getElementById('goalCount'),
+    silverTrap: document.getElementById('silverTrapCount'),
+    redTrap: document.getElementById('redTrapCount'),
+    tunnel: document.getElementById('tunnelCount'),
+    redCube: document.getElementById('redCubeCount'),
+    blueCube: document.getElementById('blueCubeCount'),
+    whiteCube: document.getElementById('whiteCubeCount')
+};
+
+// Elementos do cronômetro
+const timerDisplay = document.getElementById('timerDisplay');
+const startTimerBtn = document.getElementById('startTimerBtn');
+const pauseTimerBtn = document.getElementById('pauseTimerBtn');
+const resetTimerBtn = document.getElementById('resetTimerBtn');
+
+let timeSeconds = 360; // 6 minutos = 360 segundos
+let timerInterval = null;
+let isRunning = false;
+
+// Função para atualizar o display do cronômetro
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeSeconds / 60);
+    const seconds = timeSeconds % 60;
+    if (timerDisplay) {
+        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // Quando chegar a zero, para automaticamente
+    if (timeSeconds === 0 && isRunning) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        isRunning = false;
+        showToast('⏰ Tempo esgotado! 6 minutos de partida concluídos.', '#ff6b6b');
+    }
+}
+
+// Função para iniciar o cronômetro
+function startTimer() {
+    if (timerInterval) return; // já está rodando
+    if (timeSeconds <= 0) {
+        showToast('⏰ O tempo já acabou! Clique em Resetar para começar uma nova partida.', '#ffa500');
+        return;
+    }
+    isRunning = true;
+    timerInterval = setInterval(() => {
+        if (isRunning && timeSeconds > 0) {
+            timeSeconds--;
+            updateTimerDisplay();
+        } else if (timeSeconds <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            isRunning = false;
+        }
+    }, 1000);
+    showToast('▶️ Cronômetro iniciado!', '#008b4a');
+}
+
+// Função para pausar o cronômetro
+function pauseTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        isRunning = false;
+        showToast('⏸️ Cronômetro pausado.', '#ffc107');
+    } else {
+        showToast('⚠️ O cronômetro já está pausado.', '#ffa500');
+    }
+}
+
+// Função para resetar o cronômetro
+function resetTimer() {
+    // Para o cronômetro se estiver rodando
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+    isRunning = false;
+    timeSeconds = 360;
+    updateTimerDisplay();
+    showToast('🔄 Cronômetro resetado para 6 minutos!', '#00d4ff');
+}
+
 // Função para calcular o total de pontos
 function calculateTotal() {
-    const total = (state.obj1 * config.obj1.value) + 
-                 (state.obj2 * config.obj2.value) + 
-                 (state.obj3 * config.obj3.value) + 
-                 (state.penalty * config.penalty.value);
-    return Math.max(0, total);
+    let total = 0;
+    for (const key in config) {
+        total += state[key] * config[key].value;
+    }
+    return total;
 }
 
 // Função para atualizar toda a interface
 function updateUI() {
     // Atualizar displays dos contadores
-    elements.obj1Count.textContent = state.obj1;
-    elements.obj2Count.textContent = state.obj2;
-    elements.obj3Count.textContent = state.obj3;
-    elements.penaltyCount.textContent = state.penalty;
+    for (const key in counterElements) {
+        if (counterElements[key]) {
+            counterElements[key].textContent = state[key];
+        }
+    }
     
     // Atualizar campos de texto
     elements.matchNumber.value = state.matchNumber;
@@ -71,35 +167,26 @@ function updateUI() {
 
 // Função para incrementar um contador
 function increment(counter) {
-    if (counter === 'penalty') {
-        state.penalty++;
-    } else {
+    if (counter in state) {
         state[counter]++;
+        updateUI();
     }
-    updateUI();
 }
 
 // Função para decrementar um contador (não deixa ficar negativo)
 function decrement(counter) {
-    if (counter === 'penalty') {
-        if (state.penalty > 0) state.penalty--;
-    } else {
-        if (state[counter] > 0) state[counter]--;
+    if (counter in state && state[counter] > 0) {
+        state[counter]--;
+        updateUI();
     }
-    updateUI();
 }
 
 // Função para resetar todos os valores
 function resetAll() {
     if (confirm('⚠️ Tem certeza que deseja zerar todos os contadores?\nEsta ação não pode ser desfeita!')) {
-        state = {
-            matchNumber: state.matchNumber,
-            teamName: state.teamName,
-            obj1: 0,
-            obj2: 0,
-            obj3: 0,
-            penalty: 0
-        };
+        for (const key in config) {
+            state[key] = 0;
+        }
         updateUI();
         showToast('🔄 Todos os contadores foram zerados!', '#ff6b6b');
     }
@@ -111,15 +198,28 @@ function getFormattedResult() {
     const team = state.teamName.trim() || 'Sem time';
     const total = calculateTotal();
     
+    // Tempo restante ou decorrido
+    const minutes = Math.floor(timeSeconds / 60);
+    const seconds = timeSeconds % 60;
+    const tempoRestante = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    let detalhamento = '';
+    for (const key in config) {
+        if (state[key] > 0) {
+            detalhamento += `• ${config[key].name}: ${state[key]} x ${config[key].value} pts = ${state[key] * config[key].value} pts\n`;
+        }
+    }
+    
+    if (detalhamento === '') {
+        detalhamento = '• Nenhuma pontuação registrada\n';
+    }
+    
     return `🏆 COMPETIÇÃO DE ROBÓTICA 🏆\n` +
            `📌 Partida: ${matchNum}\n` +
            `🤖 Time: ${team}\n` +
+           `⏱️ Tempo restante: ${tempoRestante} / 6 min\n` +
            `━━━━━━━━━━━━━━━━━━━━━━\n` +
-           `📊 DETALHAMENTO DA PONTUAÇÃO:\n` +
-           `• ${config.obj1.name}: ${state.obj1} x ${config.obj1.value} pts = ${state.obj1 * config.obj1.value} pts\n` +
-           `• ${config.obj2.name}: ${state.obj2} x ${config.obj2.value} pts = ${state.obj2 * config.obj2.value} pts\n` +
-           `• ${config.obj3.name}: ${state.obj3} x ${config.obj3.value} pts = ${state.obj3 * config.obj3.value} pts\n` +
-           `• ${config.penalty.name}: ${state.penalty} x ${Math.abs(config.penalty.value)} pts = ${state.penalty * config.penalty.value} pts\n` +
+           `📊 DETALHAMENTO DA PONTUAÇÃO:\n${detalhamento}` +
            `━━━━━━━━━━━━━━━━━━━━━━\n` +
            `✨ PONTUAÇÃO TOTAL: ${total} PONTOS ✨\n` +
            `━━━━━━━━━━━━━━━━━━━━━━\n` +
@@ -167,55 +267,72 @@ async function saveToSheet() {
     const team = state.teamName.trim() || 'Sem time';
     const total = calculateTotal();
     
+    // ESTRUTURA DE DADOS COMPATÍVEL COM O Google Apps Script
     const data = {
         timestamp: new Date().toISOString(),
         matchNumber: matchNum,
         teamName: team,
-        obj1_count: state.obj1,
-        obj1_points: state.obj1 * config.obj1.value,
-        obj2_count: state.obj2,
-        obj2_points: state.obj2 * config.obj2.value,
-        obj3_count: state.obj3,
-        obj3_points: state.obj3 * config.obj3.value,
-        penalty_count: state.penalty,
-        penalty_points: state.penalty * config.penalty.value,
+        // Mantendo os campos antigos para compatibilidade (valores zerados)
+        obj1_count: 0,
+        obj1_points: 0,
+        obj2_count: 0,
+        obj2_points: 0,
+        obj3_count: 0,
+        obj3_points: 0,
+        penalty_count: 0,
+        penalty_points: 0,
+        // NOVOS CAMPOS que você vai adicionar no Google Apps Script
+        golfBall_count: state.golfBall,
+        golfBall_points: state.golfBall * config.golfBall.value,
+        silverBall_count: state.silverBall,
+        silverBall_points: state.silverBall * config.silverBall.value,
+        redBall_count: state.redBall,
+        redBall_points: state.redBall * config.redBall.value,
+        goal_count: state.goal,
+        goal_points: state.goal * config.goal.value,
+        silverTrap_count: state.silverTrap,
+        silverTrap_points: state.silverTrap * config.silverTrap.value,
+        redTrap_count: state.redTrap,
+        redTrap_points: state.redTrap * config.redTrap.value,
+        tunnel_count: state.tunnel,
+        tunnel_points: state.tunnel * config.tunnel.value,
+        redCube_count: state.redCube,
+        redCube_points: state.redCube * config.redCube.value,
+        blueCube_count: state.blueCube,
+        blueCube_points: state.blueCube * config.blueCube.value,
+        whiteCube_count: state.whiteCube,
+        whiteCube_points: state.whiteCube * config.whiteCube.value,
         total_points: total
     };
     
     showToast('💾 Salvando na planilha...', '#00d4ff');
     
     try {
-        // Tentar enviar para o Google Sheets
-        const response = await fetch(sheetConfig.url, {
+        await fetch(sheetConfig.url, {
             method: 'POST',
-            mode: 'no-cors', // Necessário para Google Apps Script
+            mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data)
         });
         
-        // Como no-cors não permite ler a resposta, assumimos sucesso
         showToast('✅ Dados salvos na planilha com sucesso!', '#00b09b');
-        
-        // Opcional: salvar também localmente como backup
         saveToLocalBackup(data);
         
     } catch (error) {
         console.error('Erro ao salvar na planilha:', error);
         showToast('❌ Erro ao salvar. Verifique a URL e tente novamente.', '#ff6b6b');
-        
-        // Salvar localmente como fallback
         saveToLocalBackup(data);
         showToast('💾 Dados salvos localmente como backup!', '#ffa500');
     }
 }
 
+
 // Salvar backup local dos dados
 function saveToLocalBackup(data) {
     let backups = JSON.parse(localStorage.getItem('robocounter_backups') || '[]');
     backups.push(data);
-    // Manter apenas os últimos 100 registros
     if (backups.length > 100) backups = backups.slice(-100);
     localStorage.setItem('robocounter_backups', JSON.stringify(backups));
 }
@@ -228,7 +345,7 @@ function exportBackupsToCSV() {
         return;
     }
     
-    const headers = ['Timestamp', 'Partida', 'Time', 'Obj1 Count', 'Obj1 Points', 'Obj2 Count', 'Obj2 Points', 'Obj3 Count', 'Obj3 Points', 'Penalty Count', 'Penalty Points', 'Total Points'];
+    const headers = ['Timestamp', 'Partida', 'Time', 'BolaGolfe', 'BolaPrata', 'BolaVermelha', 'Gol', 'CaçapaPrata', 'CaçapaVermelha', 'Túnel', 'CuboVermelho', 'CuboAzul', 'CuboBranco', 'Total'];
     const csvRows = [headers];
     
     backups.forEach(backup => {
@@ -236,25 +353,27 @@ function exportBackupsToCSV() {
             backup.timestamp,
             backup.matchNumber,
             backup.teamName,
-            backup.obj1_count,
-            backup.obj1_points,
-            backup.obj2_count,
-            backup.obj2_points,
-            backup.obj3_count,
-            backup.obj3_points,
-            backup.penalty_count,
-            backup.penalty_points,
+            `${backup.golfBall_count}(${backup.golfBall_points})`,
+            `${backup.silverBall_count}(${backup.silverBall_points})`,
+            `${backup.redBall_count}(${backup.redBall_points})`,
+            `${backup.goal_count}(${backup.goal_points})`,
+            `${backup.silverTrap_count}(${backup.silverTrap_points})`,
+            `${backup.redTrap_count}(${backup.redTrap_points})`,
+            `${backup.tunnel_count}(${backup.tunnel_points})`,
+            `${backup.redCube_count}(${backup.redCube_points})`,
+            `${backup.blueCube_count}(${backup.blueCube_points})`,
+            `${backup.whiteCube_count}(${backup.whiteCube_points})`,
             backup.total_points
         ];
         csvRows.push(row);
     });
     
     const csvContent = csvRows.map(row => row.join(',')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `robocounter_backup_${new Date().toISOString()}.csv`);
+    link.setAttribute('download', `robocounter_backup_${new Date().toISOString().slice(0,19)}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -382,7 +501,12 @@ function setupEventListeners() {
     elements.saveSheetBtn.addEventListener('click', saveSheetConfig);
     elements.closeSheetBtn.addEventListener('click', hideSheetConfig);
     
-    // Botão secreto: clique duplo no título para exportar backups
+    // Botões do cronômetro
+    if (startTimerBtn) startTimerBtn.addEventListener('click', startTimer);
+    if (pauseTimerBtn) pauseTimerBtn.addEventListener('click', pauseTimer);
+    if (resetTimerBtn) resetTimerBtn.addEventListener('click', resetTimer);
+    
+    // Botão secreto: clique 3 vezes no título para exportar backups
     let clickCount = 0;
     let timer;
     document.querySelector('h1').addEventListener('click', () => {
@@ -402,8 +526,10 @@ function setupEventListeners() {
 function init() {
     loadFromLocalStorage();
     setupEventListeners();
+    updateTimerDisplay();
     console.log('🚀 RoboCounter inicializado com sucesso!');
     console.log('💡 Dica: Clique 3 vezes no título para exportar backups');
+    console.log('⏱️ Cronômetro de 6 minutos com botões Iniciar/Pausar/Resetar!');
 }
 
 // Iniciar quando o DOM estiver pronto

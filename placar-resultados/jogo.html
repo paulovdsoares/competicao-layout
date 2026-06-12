@@ -10,6 +10,17 @@
     <div class="container">
         <h1>🤖 Acex</h1>
         
+        <!-- Cronômetro 6 minutos -->
+        <div class="timer-container">
+            <div class="timer-label">⏱️ TEMPO DE PARTIDA (6 MIN)</div>
+            <div class="timer-display" id="timerDisplay">06:00</div>
+            <div class="timer-buttons">
+                <button class="btn-timer btn-timer-start" id="startTimerBtn">▶ Iniciar</button>
+                <button class="btn-timer btn-timer-pause" id="pauseTimerBtn">⏸ Pausar</button>
+                <button class="btn-timer btn-timer-reset" id="resetTimerBtn">🔄 Resetar</button>
+            </div>
+        </div>
+        
         <div class="identification">
             <div class="input-group">
                 <label>🏆 Número da Partida</label>
@@ -22,55 +33,133 @@
         </div>
         
         <div class="score-area">
-            <!-- Objetivo 1 -->
+            <!-- Bola Golfe: 10 pontos -->
             <div class="score-card">
                 <div class="card-title">
-                    <span>🎯 Coleta de Latas</span>
+                    <span>⚫ Bola Golfe</span>
                     <span class="points-value">Vale 10 pontos</span>
                 </div>
                 <div class="card-controls">
-                    <button class="btn btn-sub" data-target="obj1">-</button>
-                    <div class="counter-display" id="obj1Count">0</div>
-                    <button class="btn btn-add" data-target="obj1">+</button>
+                    <button class="btn btn-sub" data-target="golfBall">-</button>
+                    <div class="counter-display" id="golfBallCount">0</div>
+                    <button class="btn btn-add" data-target="golfBall">+</button>
                 </div>
             </div>
             
-            <!-- Objetivo 2 -->
+            <!-- Bola Prata: 20 pontos -->
             <div class="score-card">
                 <div class="card-title">
-                    <span>⚙️ Entrega na Zona</span>
-                    <span class="points-value">Vale 25 pontos</span>
+                    <span>⚪ Bola Prata</span>
+                    <span class="points-value">Vale 20 pontos</span>
                 </div>
                 <div class="card-controls">
-                    <button class="btn btn-sub" data-target="obj2">-</button>
-                    <div class="counter-display" id="obj2Count">0</div>
-                    <button class="btn btn-add" data-target="obj2">+</button>
+                    <button class="btn btn-sub" data-target="silverBall">-</button>
+                    <div class="counter-display" id="silverBallCount">0</div>
+                    <button class="btn btn-add" data-target="silverBall">+</button>
                 </div>
             </div>
             
-            <!-- Objetivo 3 -->
+            <!-- Bola Vermelha: 30 pontos -->
             <div class="score-card">
                 <div class="card-title">
-                    <span>🚀 Desafio Especial</span>
+                    <span>🔴 Bola Vermelha</span>
+                    <span class="points-value">Vale 30 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="redBall">-</button>
+                    <div class="counter-display" id="redBallCount">0</div>
+                    <button class="btn btn-add" data-target="redBall">+</button>
+                </div>
+            </div>
+            
+            <!-- Gol: 50 pontos -->
+            <div class="score-card">
+                <div class="card-title">
+                    <span>🥅 Gol</span>
                     <span class="points-value">Vale 50 pontos</span>
                 </div>
                 <div class="card-controls">
-                    <button class="btn btn-sub" data-target="obj3">-</button>
-                    <div class="counter-display" id="obj3Count">0</div>
-                    <button class="btn btn-add" data-target="obj3">+</button>
+                    <button class="btn btn-sub" data-target="goal">-</button>
+                    <div class="counter-display" id="goalCount">0</div>
+                    <button class="btn btn-add" data-target="goal">+</button>
                 </div>
             </div>
             
-            <!-- Penalidades -->
-            <div class="score-card penalty-card">
+            <!-- Caçapa Prata: 20 pontos -->
+            <div class="score-card">
                 <div class="card-title">
-                    <span>⚠️ Penalidades</span>
-                    <span class="points-value">Perde 15 pontos</span>
+                    <span>🕳️ Caçapa Prata</span>
+                    <span class="points-value">Vale 20 pontos</span>
                 </div>
                 <div class="card-controls">
-                    <button class="btn btn-sub" data-target="penalty">-</button>
-                    <div class="counter-display" id="penaltyCount">0</div>
-                    <button class="btn btn-add" data-target="penalty">+</button>
+                    <button class="btn btn-sub" data-target="silverTrap">-</button>
+                    <div class="counter-display" id="silverTrapCount">0</div>
+                    <button class="btn btn-add" data-target="silverTrap">+</button>
+                </div>
+            </div>
+            
+            <!-- Caçapa Vermelha: 30 pontos -->
+            <div class="score-card">
+                <div class="card-title">
+                    <span>🕳️ Caçapa Vermelha</span>
+                    <span class="points-value">Vale 30 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="redTrap">-</button>
+                    <div class="counter-display" id="redTrapCount">0</div>
+                    <button class="btn btn-add" data-target="redTrap">+</button>
+                </div>
+            </div>
+            
+            <!-- Túnel: 25 pontos -->
+            <div class="score-card">
+                <div class="card-title">
+                    <span>🚇 Túnel (derruba e reconstrói)</span>
+                    <span class="points-value">Vale 25 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="tunnel">-</button>
+                    <div class="counter-display" id="tunnelCount">0</div>
+                    <button class="btn btn-add" data-target="tunnel">+</button>
+                </div>
+            </div>
+            
+            <!-- Cubo Vermelho: 120 pontos -->
+            <div class="score-card">
+                <div class="card-title">
+                    <span>🟥 Cubo Vermelho</span>
+                    <span class="points-value">Vale 120 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="redCube">-</button>
+                    <div class="counter-display" id="redCubeCount">0</div>
+                    <button class="btn btn-add" data-target="redCube">+</button>
+                </div>
+            </div>
+            
+            <!-- Cubo Azul: 140 pontos -->
+            <div class="score-card">
+                <div class="card-title">
+                    <span>🟦 Cubo Azul</span>
+                    <span class="points-value">Vale 140 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="blueCube">-</button>
+                    <div class="counter-display" id="blueCubeCount">0</div>
+                    <button class="btn btn-add" data-target="blueCube">+</button>
+                </div>
+            </div>
+            
+            <!-- Cubo Branco Extra: 180 pontos -->
+            <div class="score-card">
+                <div class="card-title">
+                    <span>⬜ Cubo Branco Extra</span>
+                    <span class="points-value">Vale 180 pontos</span>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-sub" data-target="whiteCube">-</button>
+                    <div class="counter-display" id="whiteCubeCount">0</div>
+                    <button class="btn btn-add" data-target="whiteCube">+</button>
                 </div>
             </div>
         </div>
